@@ -1,6 +1,8 @@
 import pickle 
 from flask import Flask , request , app, jsonify,url_for, render_template
 import numpy as np 
+from gevent.pywsgi import WSGIServer
+
 
 import pandas as pd 
 
@@ -8,7 +10,7 @@ import pandas as pd
 app=Flask(__name__)
 #load the regmodel 
 regmodel=pickle.load(open('regmodel.pkl','rb'))
-scaler=pickle.load(open('scaling.pkl','rb'))
+scalar=pickle.load(open('scaling.pkl','rb'))
 
 @app.route('/')
 def home ():
@@ -28,4 +30,6 @@ def predict_api():
 
 if __name__=="__main__":
        app.run(debug=True) 
+       http_server = WSGIServer(('', 5000), app)
+       http_server.serve_forever()
     
